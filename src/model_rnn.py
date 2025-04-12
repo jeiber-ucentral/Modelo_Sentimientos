@@ -18,6 +18,10 @@
 
 
 
+# # # PARA GARGAR LOS DATOS!! 
+import data_loader
+df = data_loader.main()
+
 
 
 
