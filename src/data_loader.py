@@ -36,12 +36,16 @@ from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import emoji
 
+import warnings
+warnings.filterwarnings("ignore")
+
 #--------------------------------------------------#
 # # # 2. Funcion de cargue de la base de datos # # # 
 #--------------------------------------------------#
 def cargue_datos():
     '''
-    PENDIENTE PONER QUE HACE ESTO
+    Realiza el cargue de la base de twits dado el enlace suministrado.
+    Codigo sin argumentos, lee directamente la base del enlace.
     '''
     url = "https://raw.githubusercontent.com/dD2405/Twitter_Sentiment_Analysis/master/train.csv"
     csv_path = tf.keras.utils.get_file("twitter_sentiment.csv", url)
@@ -57,13 +61,15 @@ def cargue_datos():
 # Funcion de pre-procesamiento de texto
 def preprocesar_texto(texto, stop = True, lematizar = False, stemizar = False):
   '''
-  INPUT:
+  Realiza el proceso de depuracion del texto suministrado. 
+  Se realiza a conveniencia la omision de stopwords, lematizacion o stemizacion.
+  Argumentos:
     * texto : Conversacion que se desea depurar
     * stop :  Indicador de uso u omision de stopwords. Por default es True
     * lematizar : Indicador de uso u omision de lematizacion Por default es False
     * stemizar : Indicador de uso u omision de stemizacion Por default es False
 
-  OUTPUT:
+  Salida:
     * texto : Conversacion depurada
   '''
   # Convertir a minúsculas
@@ -110,9 +116,8 @@ def preprocesar_texto(texto, stop = True, lematizar = False, stemizar = False):
 def main():
   '''
   Funcion que realiza todo el proceso de cargue y depuracion de la base de datos
-  # Argumentos:
     
-  # Retorno:
+  Salida:
     * base de datos en formato para entrenamiento y consumo del modelo
     * Mensajes con cantidad de registros cargados, dimensiones y primeros registros de ejemplo (si se desea)
   
