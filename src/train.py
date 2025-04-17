@@ -29,13 +29,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import tensorflow as tf
-# import model_rnn
+import model_rnn
 # import model_lstm 
 # import model_bilstm_attention
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import f1_score, recall_score, precision_score
+from sklearn.utils import class_weight
+
 
 #-------------------------------------------#
 # # # 2. Cargue y segmentacion de datos # # # 
@@ -87,127 +89,160 @@ def division_datos(tfidf, mensajes=True):
 #--------------------------------------------------------------#
 # # # 3. Funcion para el entrenamiento de la red propuesta # # #
 #--------------------------------------------------------------#
-# def entrenamiento(modelo, x_train, x_val, y_train, y_val, grafico=True):
-#     '''
+def entrenamiento(modelo, x_train, x_val, y_train, y_val, grafico=True):
+    '''
+    Entrena el modelo y muestra el grafico de desempeno (si se desea).
+    Argumentos:
+        * modelo: Si se desea entrenar la RNN [0], LSTM [1] o la BILSTM [2]
+        * x_train : Datos de entrenamiento ; entradas del modelo para el entrenamiento
+        * x_val : Datos de validacion del modelo ; entradas del modelo para la validacion
+        * y_train  : Datos de entrenamiento ; salida del modelo para el entrenamiento
+        * y_val  : Datos de validacion ; salida del modelo para la validacion 
+        * grafico : (True or False) si se desea (True) mostrar el grafico de desempeno del modelo en cuanto a funcion de perdida y metrica por epoca
+    Retorno:
+        * model: Retorna el modelo estimado de acuerdo a la arquitectura dada y los datos de entrenamiento y validacion
+        * History: Historia del proceso de estimacion del modelo por epoca (funcion de perdida y metricas)
+        * Grafico de desempeno (si se desea)
+    '''
+    # Separando las bases
+    # x_train, x_test, x_val, y_train, y_test, y_val = division_datos(tfidf = tfidf, mensajes=True)
 
-#     '''
+    # Cargar la arquitectura del modelo
+    if modelo == 0:
+        # Balanceando clases con smooth
+        class_weights = class_weight.compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
+        class_weights_dict = dict(enumerate(class_weights))
+        
+        # Arquitectura del modelo
+        model = model_rnn.constr_modelo(x_train = x_train)
 
-#     # Cargar la arquitectura del modelo
-#     if modelo == 0:
-#         model = model_rnn.constr_modelo(x_train = x_train)
+        # Entrenando el modelo
+        print("Entrenando el modelo RNN")
+        history = model.fit(x_train.toarray(), 
+                            y_train,
+                            epochs=10,
+                            batch_size=16,
+                            verbose=0,
+                            validation_data=(x_val.toarray(), y_val)
+                            )
 
-#     if modelo == 1:
-#         model = model_lstm.constr_modelo(x_train = x_train)
 
-#     if modelo == 2:
-#         model = model_bilstm_attention.constr_modelo(x_train = x_train)
+    # if modelo == 1:
+    #     model = model_lstm.constr_modelo(x_train = x_train)
+    #     # Entrenando el modelo
+    #     history = model.fit(x_train, 
+    #                         y_train,
+    #                         epochs=5,
+    #                         batch_size=16,
+    #                         verbose=0,
+    #                         validation_data=(x_val, y_val)
+    #                         )
+
+    # if modelo == 2:
+    #     model = model_bilstm_attention.constr_modelo(x_train = x_train)
+    #     # Entrenando el modelo
+    #     history = model.fit(x_train, 
+    #                         y_train,
+    #                         epochs=5,
+    #                         batch_size=16,
+    #                         verbose=0,
+    #                         validation_data=(x_val, y_val)
+    #                         )
+
+    if grafico:
+        fig, axes = plt.subplots(1, 2, figsize=(15, 5))
+
+        axes[0].plot(history.history['accuracy'])
+        axes[0].plot(history.history['val_accuracy'])
+        axes[0].set_title('Model Accuracy')
+        axes[0].set_ylabel('Accuracy')
+        axes[0].set_xlabel('Epoch')
+        axes[0].legend(['Train', 'Validation'], loc='upper left')
+
+        axes[1].plot(history.history['loss'])
+        axes[1].plot(history.history['val_loss'])
+        axes[1].set_title('Model Loss')
+        axes[1].set_ylabel('Loss')
+        axes[1].set_xlabel('Epoch')
+        axes[1].legend(['Train', 'Validation'], loc='upper left')
+        plt.tight_layout()
+        plt.show()
     
-#     # Entrenando el modelo
-#     history = model.fit(x_train, 
-#                         y_train,
-#                         epochs=5,
-#                         batch_size=16,
-#                         verbose=0,
-#                         validation_data=(x_val, y_val)
-#                         )
-
-#     if grafico:
-#         fig, axes = plt.subplots(1, 2, figsize=(15, 5))
-
-#         # Grafico de MAPE
-#         axes[0].plot(history.history['mape'])
-#         axes[0].plot(history.history['val_mape'])
-#         axes[0].set_title('Model MAPE')
-#         axes[0].set_ylabel('MAPE')
-#         axes[0].set_xlabel('Epoch')
-#         axes[0].legend(['Train', 'Validation'], loc='upper left')
-
-#         # Grafico de perdida (Loss)
-#         axes[1].plot(history.history['loss'])
-#         axes[1].plot(history.history['val_loss'])
-#         axes[1].set_title('Model Loss')
-#         axes[1].set_ylabel('Loss')
-#         axes[1].set_xlabel('Epoch')
-#         axes[1].legend(['Train', 'Validation'], loc='upper left')
-
-#         plt.tight_layout()
-#         plt.show()
-    
-#     return model, history
+    return model, history
     
 
 
 #----------------------------------------#
 # # # 4. Exportar el modelo estimado # # #
 #----------------------------------------#
-# def exportar_modelo(model, modelo, tfidf):
-#     '''
-#     Guarda el modelo entrenado.
-#
-#     Argumentos:
-#         * model: Modelo estimado dada la arquitectura seleccionada
-#     Retorno:
-#         * Guardado del modelo
-#     '''
-#     # Guardar el modelo estimado
-#     if tfidf:
-#         if model == 0:
-#             modelo_path = "models/rnn_tfidf.h5"
-#         elif model == 1:
-#             modelo_path = "models/lstm_tfidf.h5"
-#         elif model == 1:
-#             modelo_path = "models/bilstm_tfidf.h5"
-#         else:
-#             print("ERROR: Modelo no definido")
-#     else:
-#         if model == 0:
-#             modelo_path = "models/rnn_tf.h5"
-#         elif model == 1:
-#             modelo_path = "models/lstm_tf.h5"
-#         elif model == 1:
-#             modelo_path = "models/bilstm_tf.h5"
-#         else:
-#             print("ERROR: Modelo no definido")
-# 
-#    model.save(modelo_path)
-#    print(f"Modelo guardado en {modelo_path} 👌")
+def exportar_modelo(model, modelo, tfidf):
+    '''
+    Guarda el modelo entrenado.
+
+    Argumentos:
+        * model: Modelo estimado dada la arquitectura seleccionada
+    Retorno:
+        * Guardado del modelo
+    '''
+    # Guardar el modelo estimado
+    if tfidf:
+        if model == 0:
+            modelo_path = "models/rnn_tfidf.h5"
+        elif model == 1:
+            modelo_path = "models/lstm_tfidf.h5"
+        elif model == 2:
+            modelo_path = "models/bilstm_tfidf.h5"
+        else:
+            print("ERROR: Modelo no definido")
+    else:
+        if model == 0:
+            modelo_path = "models/rnn_tf.h5"
+        elif model == 1:
+            modelo_path = "models/lstm_tf.h5"
+        elif model == 2:
+            modelo_path = "models/bilstm_tf.h5"
+        else:
+            print("ERROR: Modelo no definido")
+
+    model.save(modelo_path)
+    print(f"Modelo guardado en {modelo_path} 👌")
 
 
 
 
 
+#--------------------------------#
+# # # 5. Funcion consolidada # # #
+#--------------------------------#
+def main(modelo, tfidf, msj=True, grafico=True):
+    '''
+    Ejecuta todo el proceso de carga, entrenamiento y exportacion de archivos.
+    Argumentos:
+        * msj: Por default es True. Indica si se desea imprimir un diagnostico de cantidad de filas y primeros registros de las bases finales
+        * grafico : (True or False) si se desea (True) mostrar el grafico de desempeno del modelo en cuanto a funcion de perdida y metrica por epoca
+    Retorno:
+        * Modelo, funcion de escalado de datos y datos de testeo exportados
+    '''
+    # Cargar y segmentar datos
+    x_train, x_test, x_val, y_train, y_test, y_val = division_datos(tfidf, mensajes=msj)
 
-# 5. Funcion consolidada
+    # Entrenar el modelo
+    model, history = entrenamiento(modelo, x_train, x_val, y_train, y_val, grafico=grafico)
+    print("MODELO ENTRENADO SATISFACTORIAMENTE!! 👌")
 
-# def main(msj=True, grafico=True):
-#     '''
-#     Ejecuta todo el proceso de carga, entrenamiento y exportacion de archivos.
-#     Argumentos:
-#         * msj: Por default es True. Indica si se desea imprimir un diagnostico de cantidad de filas y primeros registros de las bases finales
-#         * grafico : (True or False) si se desea (True) mostrar el grafico de desempeno del modelo en cuanto a funcion de perdida y metrica por epoca
-#     Retorno:
-#         * Modelo, funcion de escalado de datos y datos de testeo exportados
-#     '''
-#     # Cargar y segmentar datos
-#     x_train, x_test, x_val, y_train, y_test, y_val, scaler = division_datos(ruta, mensajes=msj)
+    # Guardar el modelo, scaler y datos de prueba
+    exportar_modelo(model, modelo, tfidf)
 
-#     # Entrenar el modelo
-#     model, history = entrenamiento(modelo, x_train, x_val, y_train, y_val, grafico=grafico)
-#     print("MODELO ENTRENADO SATISFACTORIAMENTE!! 👌")
-
-#     # Guardar el modelo, scaler y datos de prueba
-#     exportar_modelo(model, scaler, x_test, y_test)
-
-#     return model, scaler
-
-
+    return model
 
 
 
-# if __name__ == '__main__':
-#     modelo = input(¿que modelo entrenara? [0: rnn, 1: lstm, 2:bilstm])
-#     tfidf = input("Desea usar vectorizacion TF-IDF? (True / False): ").strip().lower() in ["true", "1", "yes"]
-#     msj = input("Desea ver detalles de las bases resultantes? (True / False): ").strip().lower() in ["true", "1", "yes"]
-#     grafico = input("Desea ver el grafico de entrenamiento del modelo? (True / False): ").strip().lower() in ["true", "1", "yes"]
 
-#     main(tfidf, msj, grafico)
+
+if __name__ == '__main__':
+    modelo = int(input("¿qué modelo entrenará? [0: rnn, 1: lstm, 2: bilstm]: "))
+    tfidf = input("Desea usar vectorizacion TF-IDF? (True / False): ").strip().lower() in ["true", "1", "yes"]
+    msj = input("Desea ver detalles de las bases resultantes? (True / False): ").strip().lower() in ["true", "1", "yes"]
+    grafico = input("Desea ver el grafico de entrenamiento del modelo? (True / False): ").strip().lower() in ["true", "1", "yes"]
+
+    main(modelo, tfidf, msj, grafico)
