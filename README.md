@@ -16,14 +16,14 @@ Este proyecto desarrolla un sistema de clasificación de sentimientos en tweets 
 
 | Archivo | Descripción |
 |:--------|:------------|
-| `data_loader.py` | Carga y depura la base de datos de tweets. |
-| `data_tokenizer.py` | Tokeniza y vectoriza los textos usando TF o TF-IDF. |
-| `model_rnn.py` | Arquitectura de Red Neuronal Recurrente (RNN). |
-| `model_lstm.py` | Arquitectura de Red LSTM. |
-| `model_bilstm_attention.py` | Arquitectura de Red BiLSTM con mecanismo de atención. |
-| `train.py` | Entrena los modelos y guarda los modelos entrenados. |
-| `evaluate.py` | Evalúa los modelos sobre el conjunto de prueba. |
-| `predict.py` | Clasifica nuevos mensajes usando los modelos entrenados. |
+| [data_loader.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/data_loader.py) | Carga y depura la base de datos de tweets. |
+| [data_tokenizer.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/data_tokenizer.py) | Tokeniza y vectoriza los textos usando TF o TF-IDF. |
+| [model_rnn.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/model_rnn.py) | Arquitectura de Red Neuronal Recurrente (RNN). |
+| [model_lstm.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/model_lstm.py) | Arquitectura de Red LSTM. |
+| [model_bilstm_attention.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/model_bilstm_attention.py) | Arquitectura de Red BiLSTM con mecanismo de atención. |
+| [train.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/train.py) | Entrena los modelos y guarda los modelos entrenados. |
+| [evaluate.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/evaluate.py) | Evalúa los modelos sobre el conjunto de prueba. |
+| [predict.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/predict.py) | Clasifica nuevos mensajes usando los modelos entrenados. |
 
 ---
 
@@ -49,19 +49,19 @@ nltk.download('stopwords')
 ## 🧹 Pipeline del Proyecto
 
 1. **Cargar y depurar datos**  
-   Ejecutar `data_loader.py` para cargar la base de datos y limpiar los tweets.
+   Ejecutar [data_loader.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/data_loader.py) para cargar la base de datos y limpiar los tweets.
 
 2. **Tokenizar y vectorizar**  
-   Ejecutar `data_tokenizer.py` para crear los archivos `.pkl` del tokenizador y las matrices vectorizadas (TF o TF-IDF).
+   Ejecutar [data_tokenizer.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/data_tokenizer.py) para crear los archivos `.pkl` del tokenizador y las matrices vectorizadas (TF o TF-IDF).
 
 3. **Entrenar modelos**  
-   Ejecutar `train.py` donde puedes elegir entrenar entre tres arquitecturas:
+   Ejecutar [train.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/train.py) donde puedes elegir entrenar entre tres arquitecturas:
    - `0`: RNN
    - `1`: LSTM (en versión avanzada, puedes agregar su entrenamiento)
    - `2`: BiLSTM con Atención
 
 4. **Evaluar modelos**  
-   Ejecutar `evaluate.py` para evaluar el desempeño del modelo en el conjunto de prueba.
+   Ejecutar [evaluate.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/evaluate.py) para evaluar el desempeño del modelo en el conjunto de prueba.
 
 5. **Clasificar nuevos tweets**  
    Ejecutar `predict.py` para predecir el sentimiento de un mensaje nuevo ingresado por el usuario.
@@ -78,7 +78,7 @@ nltk.download('stopwords')
 
 ## 🚀 ¿Cómo entrenar un modelo?
 
-Desde `train.py`:
+Desde [predict.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/predict.py):
 
 ```bash
 python train.py
@@ -96,7 +96,7 @@ Después, guardará el modelo en la carpeta `/models/`.
 
 ## 📈 ¿Cómo evaluar el modelo?
 
-Desde `evaluate.py`:
+Desde [evaluate.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/evaluate.py):
 
 ```bash
 python evaluate.py
@@ -116,7 +116,7 @@ El sistema mostrará métricas como:
 
 ## 💬 ¿Cómo predecir nuevos tweets?
 
-Desde `predict.py`:
+Desde [predict.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/predict.py):
 
 ```bash
 python predict.py
@@ -134,7 +134,7 @@ El sistema te devolverá si el sentimiento es **positivo** o **negativo**.
 ## 📌 Notas
 
 - Los modelos entrenados se guardan en `/models/`.
-- Actualmente en `train.py` no se activa el entrenamiento de LSTM (`model_lstm.py`), pero está disponible para ser habilitado si se desea.
+- Actualmente en [train.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/train.py) no se activa el entrenamiento de LSTM ([model_lstm.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/model_lstm.py)), pero está disponible para ser habilitado si se desea.
 - Todos los modelos usan optimizador `Adam` y función de pérdida `binary_crossentropy`.
 - Se usa **EarlyStopping** para evitar sobreentrenamiento en los modelos.
 
