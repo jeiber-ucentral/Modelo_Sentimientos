@@ -27,9 +27,21 @@ import matplotlib.pyplot as plt
   
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import f1_score, recall_score, precision_score
-
+from sklearn.metrics import f1_score, recall_score, precision_score, accuracy_score
 import tensorflow as tf
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from nltk.stem import PorterStemmer
+
+nltk.download('wordnet')
+nltk.download('punkt')
+
+# Descargar stopwords
+nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
 
 import train
 
@@ -37,6 +49,19 @@ import train
 #----------------------------------------------------#
 # # # 2. Cargue del modelo y los datos de testeo # # #
 #----------------------------------------------------#
+def procesar_texto(text):
+    '''
+    Realiza un pre procesamient de texto y la tokenizacion del texto suministrado
+
+    Argumentos:
+        * text: texto a tokenizar
+    Salida:
+        * Texto tokenizado
+    '''
+    lemmatizer = WordNetLemmatizer()
+    tokens = word_tokenize(text)
+    return [lemmatizer.lemmatize(tok).lower().strip() for tok in tokens]
+
 def cargar_modelo_y_datos(modelo, tfidf):
     '''
     Carga el modelo guardado y los datos de test desde la carpeta models.
@@ -81,7 +106,7 @@ def cargar_modelo_y_datos(modelo, tfidf):
     print("Modelo cargado correctamente 👌")
 
     # Cargue de datos test
-    x_train, x_test, x_val, y_train, y_test, y_val = division_datos(tfidf = tfidf, mensajes=True)
+    x_train, x_test, x_val, y_train, y_test, y_val = train.division_datos(tfidf = tfidf, mensajes=True)
     print(f"Datos de test cargados: {x_test.shape} registros 👌.")
 
     return model, x_test, y_test
@@ -106,16 +131,16 @@ def evaluar_modelo(model, x_test, y_test):
 
     # Calcular métricas de evaluación
     accuracy = accuracy_score(y_test, y_pred)
-    precision = precision_score(mse)
+    precision = precision_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
-    f1_score = f1_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
 
     # Guardar resultados en df
     results = pd.DataFrame({
         'ACCURACY': [accuracy],
         'PRECISION': [precision],
         'RECALL': [recall],
-        'F1_SCORE': [f1_score]
+        'F1_SCORE': [f1]
     })
 
     return results
