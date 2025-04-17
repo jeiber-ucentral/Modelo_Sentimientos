@@ -29,6 +29,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import tensorflow as tf
+from tensorflow.keras.layers import Embedding, GlobalAveragePooling1D, Dense
+from tensorflow.keras.callbacks import EarlyStopping
 import model_rnn
 # import model_lstm 
 # import model_bilstm_attention
@@ -118,13 +120,14 @@ def entrenamiento(modelo, x_train, x_val, y_train, y_val, grafico=True):
 
         # Entrenando el modelo
         print("Entrenando el modelo RNN")
-        history = model.fit(x_train.toarray(), 
+        early_stop = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
+        history = model.fit(x_train.toarray(),
                             y_train,
                             epochs=10,
-                            batch_size=16,
-                            verbose=0,
-                            validation_data=(x_val.toarray(), y_val)
-                            )
+                            batch_size=32,
+                            validation_data=(x_val.toarray(), y_val),
+                            class_weight=class_weights_dict,
+                            callbacks=[early_stop])
 
 
     # if modelo == 1:
@@ -186,20 +189,20 @@ def exportar_modelo(model, modelo, tfidf):
     '''
     # Guardar el modelo estimado
     if tfidf:
-        if model == 0:
+        if modelo == 0:
             modelo_path = "models/rnn_tfidf.h5"
-        elif model == 1:
+        elif modelo == 1:
             modelo_path = "models/lstm_tfidf.h5"
-        elif model == 2:
+        elif modelo == 2:
             modelo_path = "models/bilstm_tfidf.h5"
         else:
             print("ERROR: Modelo no definido")
     else:
-        if model == 0:
+        if modelo == 0:
             modelo_path = "models/rnn_tf.h5"
-        elif model == 1:
+        elif modelo == 1:
             modelo_path = "models/lstm_tf.h5"
-        elif model == 2:
+        elif modelo == 2:
             modelo_path = "models/bilstm_tf.h5"
         else:
             print("ERROR: Modelo no definido")
@@ -224,14 +227,21 @@ def main(modelo, tfidf, msj=True, grafico=True):
         * Modelo, funcion de escalado de datos y datos de testeo exportados
     '''
     # Cargar y segmentar datos
+    print("REALIZANDO SEGMENTACION DE DATOS ✂️")
     x_train, x_test, x_val, y_train, y_test, y_val = division_datos(tfidf, mensajes=msj)
+    print("")
 
     # Entrenar el modelo
+    print("ENTRENANDO EL MODELO ⏳⌛")
     model, history = entrenamiento(modelo, x_train, x_val, y_train, y_val, grafico=grafico)
     print("MODELO ENTRENADO SATISFACTORIAMENTE!! 👌")
+    print("")
 
     # Guardar el modelo, scaler y datos de prueba
+    print("EXPORTANDO EL MODELO 🖨️")
     exportar_modelo(model, modelo, tfidf)
+
+    print("PROCESO CULMINADO SATISFACTORIAMENTE!! 😎")
 
     return model
 

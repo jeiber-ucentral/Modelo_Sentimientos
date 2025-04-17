@@ -26,9 +26,11 @@ warnings.filterwarnings('ignore')
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, GRU, Dense
+from tensorflow.keras.layers import Embedding, GRU, Dense, GlobalAveragePooling1D, Dropout
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras import regularizers
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -58,9 +60,11 @@ def constr_modelo(x_train):
     '''
     # # Definicion de la Arquitectura
     model = Sequential()
-    model.add(Embedding(input_dim=x_train.shape[1], output_dim=128))  
-    model.add(GRU(128))  
-    model.add(Dense(1, activation='sigmoid')) 
+    model.add(Embedding(input_dim=x_train.shape[1], output_dim=128))
+    model.add(Dropout(0.5))  
+    model.add(GlobalAveragePooling1D())
+    model.add(Dropout(0.3))  
+    model.add(Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(1e-4))) 
 
     # Compilar el modelo
     model.compile(optimizer='adam', 
