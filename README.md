@@ -1,6 +1,6 @@
 # Análisis de Sentimiento en Tweets con RNN, LSTM y BiLSTM + Atención
 
-## 📚 Descripción
+## Descripción
 
 Este proyecto desarrolla un sistema de clasificación de sentimientos en tweets mediante redes neuronales recurrentes (RNN), redes LSTM, y redes BiLSTM con mecanismos de atención. El flujo completo incluye:
 
@@ -12,7 +12,7 @@ Este proyecto desarrolla un sistema de clasificación de sentimientos en tweets 
 
 ---
 
-## 📂 Estructura de Archivos
+## Estructura de Archivos
 
 | Archivo | Descripción |
 |:--------|:------------|
@@ -27,7 +27,7 @@ Este proyecto desarrolla un sistema de clasificación de sentimientos en tweets 
 
 ---
 
-## 🛠️ Instalación de Librerías
+## Instalación de Librerías
 
 Antes de ejecutar el proyecto, asegúrate de instalar las siguientes librerías:
 
@@ -46,7 +46,7 @@ nltk.download('stopwords')
 
 ---
 
-## 🧹 Pipeline del Proyecto
+## Pipeline del Proyecto
 
 1. **Cargar y depurar datos**  
    Ejecutar [data_loader.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/data_loader.py) para cargar la base de datos y limpiar los tweets.
@@ -68,7 +68,7 @@ nltk.download('stopwords')
 
 ---
 
-## 🧑‍🦰 Modelos Implementados
+## Modelos Implementados
 
 - **RNN**: Red simple con embedding y capa de pooling.
 - **LSTM**: Red con memoria de largo plazo para relaciones de largo alcance.
@@ -76,7 +76,7 @@ nltk.download('stopwords')
 
 ---
 
-## 🚀 ¿Cómo entrenar un modelo?
+## ¿Cómo entrenar un modelo?
 
 Desde [predict.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/predict.py):
 
@@ -94,7 +94,7 @@ Después, guardará el modelo en la carpeta `/models/`.
 
 ---
 
-## 📈 ¿Cómo evaluar el modelo?
+## ¿Cómo evaluar el modelo?
 
 Desde [evaluate.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/evaluate.py):
 
@@ -114,7 +114,7 @@ El sistema mostrará métricas como:
 
 ---
 
-## 💬 ¿Cómo predecir nuevos tweets?
+## ¿Cómo predecir nuevos tweets?
 
 Desde [predict.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/predict.py):
 
@@ -131,7 +131,7 @@ El sistema te devolverá si el sentimiento es **positivo** o **negativo**.
 
 ---
 
-## 📌 Notas
+## Notas
 
 - Los modelos entrenados se guardan en `/models/`.
 - Actualmente en [train.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/train.py) no se activa el entrenamiento de LSTM ([model_lstm.py](https://github.com/jeiber-ucentral/Modelo_Sentimientos/blob/db45f9a6fe538587b82083d233aa67005d6229a4/src/model_lstm.py)), pero está disponible para ser habilitado si se desea.
@@ -140,7 +140,7 @@ El sistema te devolverá si el sentimiento es **positivo** o **negativo**.
 
 ---
 
-## ✨ Autor
+## Autor
 
-- Proyecto desarrollado para fines académicos y experimentales de Deep Learning aplicado a análisis de sentimientos.
+- Proyecto desarrollado para fines académicos y experimentales de Deep Learning aplicado a análisis de sentimientos por los estudiantes: Willian Lopez, Jeiber Díaz, Ronald Salinas, Gretel Ruiz
 
