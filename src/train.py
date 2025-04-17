@@ -31,8 +31,9 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.layers import Embedding, GlobalAveragePooling1D, Dense
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.layers import LSTM
 import model_rnn
-# import model_lstm 
+import model_lstm 
 import model_bilstm_attention
 
 from sklearn.model_selection import train_test_split
@@ -130,16 +131,23 @@ def entrenamiento(modelo, x_train, x_val, y_train, y_val, grafico=True):
                             callbacks=[early_stop])
 
 
-    # if modelo == 1:
-    #     model = model_lstm.constr_modelo(x_train = x_train)
-    #     # Entrenando el modelo
-    #     history = model.fit(x_train, 
-    #                         y_train,
-    #                         epochs=5,
-    #                         batch_size=16,
-    #                         verbose=0,
-    #                         validation_data=(x_val, y_val)
-    #                         )
+    if modelo == 1:
+        # Balanceando clases con smooth
+        class_weights = class_weight.compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
+        class_weights_dict = dict(enumerate(class_weights))
+        
+        # Arquitectura del modelo
+        print("Entrenando el modelo LSTM")
+        model = model_lstm.constr_modelo_lstm(x_train = x_train)
+
+        # Entrenando el modelo
+        history = model.fit(x_train.toarray(),
+                            y_train,
+                            epochs=5,
+                            batch_size=32,
+                            validation_data=(x_val.toarray(), y_val),
+                            class_weight=class_weights_dict
+                            )
 
     if modelo == 2:
         # Balanceando clases con smooth
@@ -217,9 +225,6 @@ def exportar_modelo(model, modelo, tfidf):
     print(f"Modelo guardado en {modelo_path} 👌")
 
 
-
-
-
 #--------------------------------#
 # # # 5. Funcion consolidada # # #
 #--------------------------------#
@@ -250,9 +255,6 @@ def main(modelo, tfidf, msj=True, grafico=True):
     print("PROCESO CULMINADO SATISFACTORIAMENTE!! 😎")
 
     return model
-
-
-
 
 
 if __name__ == '__main__':
