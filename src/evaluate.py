@@ -44,7 +44,7 @@ nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
 import train
-
+from model_bilstm_attention import Attention
 
 #----------------------------------------------------#
 # # # 2. Cargue del modelo y los datos de testeo # # #
@@ -102,7 +102,10 @@ def cargar_modelo_y_datos(modelo, tfidf):
         else:
             print("ERROR: Modelo no definido")
 
-    model = tf.keras.models.load_model(modelo_path)
+    if modelo == 2:
+        model = tf.keras.models.load_model(modelo_path, custom_objects={'Attention': Attention})
+    else:
+        model = tf.keras.models.load_model(modelo_path)
     print("Modelo cargado correctamente 👌")
 
     # Cargue de datos test

@@ -58,8 +58,8 @@ nltk.download('omw-1.4')
 ##### 2. Definicion de la arquitectura del modelo #####
 
 class Attention(Layer):
-    def __init__(self, units):
-        super(Attention, self).__init__()
+    def __init__(self, units, **kwargs):
+        super(Attention, self).__init__(**kwargs)
         self.W1 = tf.keras.layers.Dense(units)
         self.W2 = tf.keras.layers.Dense(units)
         self.V = tf.keras.layers.Dense(1)
@@ -75,6 +75,11 @@ class Attention(Layer):
         context_vector = tf.reduce_sum(context_vector, axis=1)
 
         return context_vector # Return only the context vector
+
+    def get_config(self): 
+        config = super(Attention, self).get_config()
+        config.update({"units": self.units})
+        return config
 
 
 

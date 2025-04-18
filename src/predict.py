@@ -47,6 +47,8 @@ import data_loader
 from evaluate import procesar_texto
 from data_loader import preprocesar_texto
 
+from model_bilstm_attention import Attention
+
 #--------------------------------#
 # # # # 2. Cargue del modelo # # #
 #--------------------------------#
@@ -61,15 +63,7 @@ def cargar_modelo(modelo, tfidf):
         - model: Modelo cargado.
     '''
     # Cargue del modelo
-    '''
-    Guarda el modelo entrenado.
-
-    Argumentos:
-        * model: Modelo estimado dada la arquitectura seleccionada
-    Retorno:
-        * Guardado del modelo
-    '''
-    # Guardar el modelo estimado
+    
     if tfidf:
         if modelo == 0:
             modelo_path = "models/rnn_tfidf.h5"
@@ -90,7 +84,11 @@ def cargar_modelo(modelo, tfidf):
             print("ERROR: Modelo no definido")
 
     # Cargando el modelo
-    model = tf.keras.models.load_model(modelo_path)
+    if modelo == 2:
+        model = tf.keras.models.load_model(modelo_path, custom_objects={'Attention': Attention})
+    else:
+        model = tf.keras.models.load_model(modelo_path)
+
     print("Modelo cargado correctamente 👌")
 
     # Cargando vectorizador
