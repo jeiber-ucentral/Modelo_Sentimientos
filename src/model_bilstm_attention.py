@@ -56,10 +56,10 @@ nltk.download('omw-1.4')
 
 
 ##### 2. Definicion de la arquitectura del modelo #####
-
 class Attention(Layer):
     def __init__(self, units, **kwargs):
         super(Attention, self).__init__(**kwargs)
+        self.units = units  # Asigna units como atributo de la instancia
         self.W1 = tf.keras.layers.Dense(units)
         self.W2 = tf.keras.layers.Dense(units)
         self.V = tf.keras.layers.Dense(1)
@@ -76,12 +76,10 @@ class Attention(Layer):
 
         return context_vector # Return only the context vector
 
-    def get_config(self): 
+    def get_config(self):
         config = super(Attention, self).get_config()
         config.update({"units": self.units})
         return config
-
-
 
 
 def constr_modelo(x_train):

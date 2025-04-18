@@ -161,7 +161,7 @@ def entrenamiento(modelo, x_train, x_val, y_train, y_val, grafico=True):
         print("Entrenando el modelo BILSTM CON ATENCION")
         history = model.fit(x_train.toarray(),
                             y_train,
-                            epochs=1, # 5,
+                            epochs=5, # 5,
                             batch_size=64,
                             validation_data=(x_val.toarray(), y_val),
                             class_weight=class_weights_dict)
